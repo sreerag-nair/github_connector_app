@@ -27,7 +27,7 @@ class App extends Component {
           <Grid item xs></Grid>
           <Grid item xs={5}>
             <MuiThemeProvider theme={buttonTheme}>
-              <a href="https://github.com/login/oauth/authorize?client_id=3fb8c782622ac4a1d0a6&redirect_uri=http://localhost:3000/redirect"
+              <a href=  "http://localhost:8001/authenticate"  //"https://github.com/login/oauth/authorize?client_id=3fb8c782622ac4a1d0a6&redirect_uri=http://localhost:3000/redirect"
               style = {{ textDecoration : 'none' }}>
                 <Button variant="contained" color="primary" style={{ width: '100%' }}>
                   <PermIdentity />

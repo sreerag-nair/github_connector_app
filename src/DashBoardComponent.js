@@ -45,16 +45,85 @@ const deleteGistButton = createMuiTheme({
 class DashBoardComponent extends Component {
 
     state = {
-        access_code: ''
+        code : '',
+        access_token: '',
+        showCreateGistComponent: true,
     }
 
     componentDidMount() {
-        const code =
+        /* const access_code =
+            window.location.href.match(/\?access_code=(.*)/) &&
+            window.location.href.match(/\?access_code=(.*)/)[1] 
+            
+            this.setState(access_code)
+            */
+
+        
+        const code = 
+            window.location.href.match(/\?code=(.*)/) &&
+            window.location.href.match(/\?code=(.*)/)[1]
+
+        if(code){
+            axios.get('http://localhost:8001/getaccesstoken?code=' + code)
+            .then((response) =>{
+                console.log("CODE RESPONSE : " , response.data.access_token)
+                this.setState( {access_token : response.data.access_token} ,
+                    () =>{
+                        console.log("state : ", this.state)
+                    })
+            })
+        }
+    }
+
+    showCreateGist(){
+
+        // this.setState(access_code)
+        
+        const code = 
+            window.location.href.match(/\?code=(.*)/) &&
+            window.location.href.match(/\?code=(.*)/)[1]
+
+
+        if(code){
+            axios.get('http://localhost:8001/authenticate?code=' + code)
+            .then((response) =>{
+                console.log("CODE RESPONSE : " , response)
+            })
+        }
+        else{
+            console.log("ELSE")
+            axios.get('http://localhost:8001/authenticate')
+        }
+
+        this.setState({ showCreateGistComponent : true })
+    }
+
+    showDeleteGist(){
+
+        const access_code =
             window.location.href.match(/\?access_code=(.*)/) &&
             window.location.href.match(/\?access_code=(.*)/)[1]
 
-        this.setState({ access_code: code })
+        this.setState(access_code)
+        
+        const code = 
+            window.location.href.match(/\?code=(.*)/) &&
+            window.location.href.match(/\?code=(.*)/)[1]
+
+        if(code){
+            axios.get('http://localhost:8001/authenticate?code=' + code)
+            .then((response) =>{
+                console.log("CODE RESPONSE : " , response)
+            })
+            .catch(() =>{
+                this.props.history.push('/d')
+            })
+        }
+        
+
+        this.setState({ showCreateGistComponent : false })
     }
+
 
     render() {
         return (
@@ -63,34 +132,34 @@ class DashBoardComponent extends Component {
                 <Grid container spacing={24}>
                     <Grid item xs></Grid>
                     <Grid item xs={5}>
+                       <a href = "http://localhost:8001/authenticate">
+                       <Button type = "primary">
                         DashBoardComponent
+                        </Button>
+                       </a>
                     </Grid>
                     <Grid item xs></Grid>
                 </Grid>
 
 
                 <Grid container spacing={24}>
-                    <Grid item xs>XS</Grid>
+                    <Grid item xs></Grid>
                     <Grid item xs={5}>
-                        <Link to='/d/create'>
-                            <MuiThemeProvider theme={createGistButton}>
-                                <Button variant="contained" color="primary" style={{ width: '50%' }}>
-                                    Create gist
+                        <MuiThemeProvider theme={createGistButton}>
+                            <Button onClick = { this.showCreateGist.bind(this) }  variant="contained" color="primary" style={{ width: '50%' }}>
+                                Create gist
                             </Button>
-                            </MuiThemeProvider>
-                        </Link>
+                        </MuiThemeProvider>
 
 
 
-                        <Link to='/d/delete'>
-                            <MuiThemeProvider theme={deleteGistButton}>
-                                <Button variant="contained" color="primary" style={{ width: '50%', right: '0px' }}>
-                                    Delete gist
+                        <MuiThemeProvider theme={deleteGistButton}>
+                            <Button onClick = { this.showDeleteGist.bind(this) } variant="contained" color="primary" style={{ width: '50%', right: '0px' }}>
+                                Delete gist
                             </Button>
-                            </MuiThemeProvider>
-                        </Link>
+                        </MuiThemeProvider>
                     </Grid>
-                    <Grid item xs>XS</Grid>
+                    <Grid item xs></Grid>
                 </Grid>
 
 
@@ -98,16 +167,18 @@ class DashBoardComponent extends Component {
 
 
                     <Grid container spacing={24}>
-                        <Grid item xs>XS</Grid>
+                        <Grid item xs></Grid>
                         <Grid item xs={10}>
 
-                            <Switch>
-                                <Route path='/d/create' render={() => <GistCreateComponent />} />
-                                <Route path='/d/delete' render={() => <GistDeleteComponent />} />
-                            </Switch>
+
+                            {
+                                this.state.showCreateGistComponent ?
+                                <GistCreateComponent access_token = { this.state.access_token } /> : 
+                                <GistDeleteComponent access_token = { this.state.access_token }/>
+                                }
 
                         </Grid>
-                        <Grid item xs>XS</Grid>
+                        <Grid item xs></Grid>
                     </Grid>
 
 

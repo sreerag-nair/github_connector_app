@@ -35,6 +35,17 @@ class RedirectComponent extends Component {
         }
         console.log("GH : ", githubAuthObj)
 
+
+
+        axios.get('http://localhost:8001/getaccesstoken?code=' + this.state.code)
+        .then((response) =>[
+            console.log("RESPONSE IN REDIRECT")
+        ])
+
+
+
+
+
         /* axios.post('https://github.com/login/oauth/access_token', githubAuthObj, {
             headers: {
                 'Accept': 'application/json',
