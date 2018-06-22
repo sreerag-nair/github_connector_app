@@ -48,6 +48,7 @@ class DashBoardComponent extends Component {
         code : '',
         access_token: '',
         showCreateGistComponent: true,
+        disableButtons : true,
     }
 
     componentDidMount() {
@@ -67,7 +68,7 @@ class DashBoardComponent extends Component {
             axios.get('http://localhost:8001/getaccesstoken?code=' + code)
             .then((response) =>{
                 console.log("CODE RESPONSE : " , response.data.access_token)
-                this.setState( {access_token : response.data.access_token} ,
+                this.setState( { disableButtons : false,  access_token : response.data.access_token} ,
                     () =>{
                         console.log("state : ", this.state)
                     })
@@ -79,7 +80,7 @@ class DashBoardComponent extends Component {
 
         // this.setState(access_code)
         
-        const code = 
+        /* const code = 
             window.location.href.match(/\?code=(.*)/) &&
             window.location.href.match(/\?code=(.*)/)[1]
 
@@ -93,14 +94,14 @@ class DashBoardComponent extends Component {
         else{
             console.log("ELSE")
             axios.get('http://localhost:8001/authenticate')
-        }
+        } */
 
         this.setState({ showCreateGistComponent : true })
     }
 
     showDeleteGist(){
 
-        const access_code =
+        /* const access_code =
             window.location.href.match(/\?access_code=(.*)/) &&
             window.location.href.match(/\?access_code=(.*)/)[1]
 
@@ -114,15 +115,17 @@ class DashBoardComponent extends Component {
             axios.get('http://localhost:8001/authenticate?code=' + code)
             .then((response) =>{
                 console.log("CODE RESPONSE : " , response)
-            })
+                
+            }) 
             .catch(() =>{
                 this.props.history.push('/d')
             })
-        }
+        } */
         
 
         this.setState({ showCreateGistComponent : false })
     }
+
 
 
     render() {
@@ -131,10 +134,10 @@ class DashBoardComponent extends Component {
 
                 <Grid container spacing={24}>
                     <Grid item xs></Grid>
-                    <Grid item xs={5}>
+                    <Grid item xs={2}>
                        <a href = "http://localhost:8001/authenticate">
                        <Button type = "primary">
-                        DashBoardComponent
+                        Get new access token
                         </Button>
                        </a>
                     </Grid>
@@ -146,7 +149,7 @@ class DashBoardComponent extends Component {
                     <Grid item xs></Grid>
                     <Grid item xs={5}>
                         <MuiThemeProvider theme={createGistButton}>
-                            <Button onClick = { this.showCreateGist.bind(this) }  variant="contained" color="primary" style={{ width: '50%' }}>
+                            <Button disabled = { this.state.disableButtons } onClick = { this.showCreateGist.bind(this) }  variant="contained" color="primary" style={{ width: '50%' }}>
                                 Create gist
                             </Button>
                         </MuiThemeProvider>
@@ -154,7 +157,7 @@ class DashBoardComponent extends Component {
 
 
                         <MuiThemeProvider theme={deleteGistButton}>
-                            <Button onClick = { this.showDeleteGist.bind(this) } variant="contained" color="primary" style={{ width: '50%', right: '0px' }}>
+                            <Button disabled = { this.state.disableButtons } onClick = { this.showDeleteGist.bind(this) } variant="contained" color="primary" style={{ width: '50%', right: '0px' }}>
                                 Delete gist
                             </Button>
                         </MuiThemeProvider>
@@ -168,7 +171,7 @@ class DashBoardComponent extends Component {
 
                     <Grid container spacing={24}>
                         <Grid item xs></Grid>
-                        <Grid item xs={10}>
+                        <Grid item xs={5}>
 
 
                             {

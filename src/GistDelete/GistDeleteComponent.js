@@ -1,38 +1,61 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Grid, Button, TextField } from '@material-ui/core';
 
-class GistDeleteComponent extends Component{
+class GistDeleteComponent extends Component {
 
 
     state = {
-        code : ''
+        username: '',
+        userGistObject : ''
     }
-    
-    componentDidMount(){
-        // alert('GistCreateComponent')
-        
-        const code =
-            window.location.href.match(/\?code=(.*)/) &&
-            window.location.href.match(/\?code=(.*)/)[1]
-        this.setState({ code: code }, 
-        () =>{
 
-            axios.post('https://github.com/login/oauth/access_token',{
-                client_id : '3fb8c782622ac4a1d0a6',
-                client_secret : 'fe62abf8e17b91d71e2c94c367af00e6ba7ba8e6',
-                code : this.state.code,
-                redirect_uri : 'http://localhost:3000/dashboard'
-            })
-            .then(() =>{
-                
-            })
 
+    updateInput(event) {
+        this.setState({ [event.target.name]: event.target.value })
+    }
+
+    getUserGists() {
+        axios.get("https://api.github.com/users/" + this.state.username + "/gists")
+        .then((response) =>{
+            console.log("RESPONSE : ", response.data)
+            // this.setState({ userGistObject :  })
         })
     }
-    
-    render(){
-        return(
-            <h1>GistDeleteComponent</h1>
+
+    render() {
+        return (
+            <div>
+
+                <h1>GistDeleteComponent</h1>
+                <Grid container spacing={24}>
+                    <Grid item xs={12}>
+                        <TextField
+                            required
+                            name="username"
+                            label="Enter the username"
+                            onChange={this.updateInput.bind(this)}
+                            value={this.state.username}
+                        >
+
+                        </TextField>
+                        <Button
+                            onClick={this.getUserGists.bind(this)}
+                        >Submit
+                        </Button>
+                    </Grid>
+
+                    {
+                        this.state.userGistObject ?
+                        (
+                            <h1>Something will come here</h1>
+                        )
+                        :
+                        null
+                    }
+                </Grid>
+
+            </div>
         )
     }
 }
